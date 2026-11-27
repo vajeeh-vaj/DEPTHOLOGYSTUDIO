@@ -1,0 +1,31 @@
+DEPTHOLOGY STUDIO — PWA INSTALLATION
+
+1. Upload manifest.json and sw.js to the ROOT of your GitHub repository, beside index.html.
+2. Add the two icon files logo-192.png and logo-512.png to the same root folder. They must be real PNG images with the exact pixel dimensions in their filenames. Use your Depthology logo, centered on a square canvas. Keep logo.png too, because the current site uses it as its favicon.
+3. In index.html, inside <head>, add:
+
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Depthology">
+<link rel="apple-touch-icon" href="/logo-192.png">
+
+4. Just before </body> in index.html, add:
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .catch(error => console.error('Depthology service worker registration failed:', error));
+    });
+  }
+</script>
+
+5. Commit and push the changes to GitHub, then wait for Vercel deployment to finish.
+6. Open https://depthology-studio.vercel.app/ in Chrome on Android. Refresh the page, wait a few seconds, then use Chrome menu > Install app (or Add to Home screen, depending on Chrome version).
+
+IMPORTANT:
+- Do not put these files inside a subfolder. They must be at the website root.
+- The icon files must exist and their actual dimensions must match the manifest declarations. The manifest deliberately references logo-192.png and logo-512.png; create both before deploying.
+- The service worker caches the site shell and same-origin GET assets. It does not cache Supabase API traffic or form submissions. Contact form sending still requires an internet connection.
