@@ -17,6 +17,16 @@
 <title>DepthologyStudio — Think Beyond Limits | Graphic Design &amp; Portfolio Websites</title>
 <meta name="description" content="DepthologyStudio is an independent design studio creating identities, logos, posters and visual stories.">
 <link rel="icon" type="image/png" href="/logo.png">
+ 
+<link rel="manifest" href="/manifest.json">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Depthology">
+
+<link rel="apple-touch-icon" href="/logo-192.png">
+
 <meta name="google-site-verification" content="nMO6bmDeH1XaNeObsTzvVd-CiOEUoZqB6xkuK__1NQs" />
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090909">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -284,4 +294,17 @@ let observer;function observeReveals(){if(observer)observer.disconnect();observe
  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue){document.documentElement.dataset.theme=e.newValue==='light'?'light':'dark';const next=document.documentElement.dataset.theme;if(btn){const label=next==='dark'?'Switch to light theme':'Switch to dark theme';btn.setAttribute('aria-label',label);btn.title=label;}const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=next==='light'?'#ffffff':'#090909';window.dispatchEvent(new CustomEvent('depthology:themechange',{detail:{theme:next}}));}});
 })();
 </script>
+ 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', {
+      scope: '/'
+    }).catch(error => {
+      console.error('Depthology PWA error:', error);
+    });
+  });
+}
+</script>
+
 </body></html>
