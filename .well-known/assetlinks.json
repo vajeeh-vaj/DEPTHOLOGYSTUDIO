@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.depthology_studio.twa",
+    "sha256_cert_fingerprints": [
+      "1B:CA:EC:48:96:D5:CE:C4:56:72:14:28:44:B0:BD:B7:DF:9F:4D:0F:91:4E:39:6F:99:56:7B:4E:44:CE:AF:8C"
+    ]
+  }
+}]
