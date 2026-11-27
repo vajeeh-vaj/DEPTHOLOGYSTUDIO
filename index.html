@@ -169,8 +169,62 @@ html[data-theme="light"] .stat span{color:#625d69!important}
 .toast{position:fixed!important;z-index:99999!important;left:50%!important;bottom:32px!important;display:block!important;visibility:hidden;opacity:0;transform:translate(-50%,18px);background:#c8ff43!important;color:#090909!important;border:1px solid #c8ff43!important;box-shadow:0 12px 35px #0005;padding:14px 22px!important;border-radius:999px!important;font-size:12px!important;font-weight:600!important;max-width:calc(100vw - 32px);text-align:center;transition:opacity .25s ease,transform .25s ease,visibility .25s ease;pointer-events:none}
 .toast.show{visibility:visible!important;opacity:1!important;transform:translate(-50%,0)!important}
 html[data-theme="light"] .toast{background:#643fae!important;color:#fff!important;border-color:#643fae!important}
+ 
+/* DEPTHOLOGY VIOLET LOADER */
+#depthSplash {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #090909;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .4s ease;
+}
+
+.depth-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.depth-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #9a7cff;
+  animation: depthPulse .8s infinite ease-in-out;
+}
+
+.depth-dots span:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.depth-dots span:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes depthPulse {
+  0%, 80%, 100% {
+    transform: translateY(0) scale(.65);
+    opacity: .4;
+  }
+  40% {
+    transform: translateY(-9px) scale(1.1);
+    opacity: 1;
+  }
+}
+
 </style></head>
-<body><div class="cursor" id="cursor"></div><div class="grain"></div>
+<body>
+<div id="depthSplash">
+  <div class="depth-dots">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<div class="cursor" id="cursor"></div>
+<div class="grain"></div>
 <header class="nav"><a href="#home" class="logo" id="brandLogo">DepthologyStudio<span>®</span></a><nav class="navlinks" id="navlinks"><a href="#home">Home</a><a href="#works">Works</a><a href="#about">About</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></nav><a href="#contact" class="nav-cta">START A PROJECT <span>↗</span></a><button type="button" class="arcade-launcher" id="arcadeLauncher"><span class="arcade-launcher-icon">▦</span><span>PLAY GAME</span><i></i></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light theme" title="Switch to light theme"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 13A8.5 8.5 0 0 1 11 3.2 8.7 8.7 0 1 0 20.8 13Z"/></svg></button><button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button></header>
 <main><section class="hero" id="home"><div class="hero-top"><span class="eyebrow" id="heroEyebrow">Independent creative studio</span><span class="availability"><i class="dot"></i><span id="availabilityText">Available for select projects</span></span></div><div class="hero-orbit"><div class="orbit-core"></div></div><h1 id="heroTitle">THINK<br><span class="stroke">BEYOND</span><br>LIMITS<span style="color:var(--accent)">.</span></h1><div class="hero-bottom"><p class="hero-copy" id="heroCopy"><strong>DepthologyStudio®</strong> builds distinctive visual identities and meaningful design systems for brands ready to be remembered.</p><div><a href="#works" class="pill">EXPLORE SELECTED WORK <span>↘</span></a><p class="hero-note" style="margin:18px 0 0">Strategy · Identity · Visual culture</p></div><div class="scrollline">Scroll to explore</div></div></section>
 <div class="marquee"><div class="marquee-track"><span>THINK DEEPER</span><b>✳</b><span>DESIGN WITH INTENTION</span><b>✳</b><span>MAKE IT MATTER</span><b>✳</b><span>THINK DEEPER</span><b>✳</b><span>DESIGN WITH INTENTION</span><b>✳</b><span>MAKE IT MATTER</span><b>✳</b></div></div>
@@ -306,5 +360,18 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+ <script>
+window.addEventListener('load', function() {
+  const splash = document.getElementById('depthSplash');
+
+  if (splash) {
+    splash.style.opacity = '0';
+
+    setTimeout(function() {
+      splash.remove();
+    }, 450);
+  }
+});
+ </script>
 
 </body></html>
