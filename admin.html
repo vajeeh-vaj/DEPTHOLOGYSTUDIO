@@ -26,13 +26,148 @@ html[data-theme="light"] code{color:#643fae!important}
 .theme-toggle:hover{transform:rotate(12deg) scale(1.06);border-color:var(--accent)}
 .theme-toggle svg{width:18px;height:18px;display:block}.theme-toggle .icon-moon{display:none}
 html[data-theme="light"] .theme-toggle .icon-sun{display:none}html[data-theme="light"] .theme-toggle .icon-moon{display:block}
+ 
+/* DEPTHOLOGY AI ADMIN PANEL */
+.dai-admin-section {
+  padding: 22px;
+  margin: 22px 0;
+  border: 1px solid var(--border, #333);
+  border-radius: 15px;
+}
+
+.dai-admin-section h3 {
+  margin: 0 0 15px;
+}
+
+.dai-admin-section label {
+  display: block;
+  margin: 13px 0 6px;
+}
+
+.dai-admin-section input:not([type="checkbox"]),
+.dai-admin-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border, #444);
+  border-radius: 9px;
+  background: var(--card, #151515);
+  color: inherit;
+  font: inherit;
+}
+
+.dai-admin-section textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.dai-admin-section button {
+  margin: 12px 8px 0 0;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: #c8ff43;
+  color: #090909;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dai-knowledge-item,
+.dai-question-item {
+  padding: 15px;
+  margin: 12px 0;
+  border: 1px solid var(--border, #333);
+  border-radius: 11px;
+  overflow-wrap: anywhere;
+}
+
+.dai-knowledge-item small,
+.dai-question-item small {
+  opacity: .7;
+}
+
 
 </style></head><body><div class="wrap"><header class="top"><div><div class="brand">DepthologyStudio<span>®</span></div><div class="muted">Private content management · Changes publish to the portfolio</div></div><div class="actions" style="margin:0"><button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light theme" title="Switch to light theme"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 13A8.5 8.5 0 0 1 11 3.2 8.7 8.7 0 1 0 20.8 13Z"/></svg></button><a class="btn" href="index.html" target="_blank">View website ↗</a><button class="btn hidden" id="logoutBtn">Sign out</button></div></header>
 <section class="panel" id="loginPanel"><h2>Studio sign in</h2><p>Sign in with the admin account you created in Supabase Authentication. Public visitors cannot use this dashboard to edit the site.</p><div class="grid"><div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="username" placeholder="Your admin email"></div><div class="field"><label>Password</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password"></div></div><button class="btn primary" id="loginBtn">Sign in securely</button><div class="status" id="loginStatus"></div><div class="hint" style="margin-top:18px">First setup? Follow <b>SETUP.md</b> included with this project. Do not put a Supabase service-role/secret key in this page.</div></section>
-<div id="dashboard" class="hidden"><div class="tabs"><button class="tab active" data-tab="site">Site details</button><button class="tab" data-tab="projects">Works</button><button class="tab" data-tab="faqs">FAQ assistant</button><button class="tab" data-tab="messages">Feedback inbox</button></div>
+<div id="dashboard" class="hidden"><div class="tabs"><button class="tab active" data-tab="site">Site details</button><button class="tab" data-tab="projects">Works</button><button class="tab" data-tab="faqs">FAQ assistant</button><button class="tab" data-tab="assistant">AI Assistant</button><button class="tab" data-tab="messages">Feedback inbox</button></div>
 <section class="panel tab-panel" id="tab-site"><h2>Site details</h2><p>Update the text and links shown on your public website. Changes are saved to the shared database.</p><form id="settingsForm"><div class="grid"><div class="field"><label>Brand name</label><input name="brand" required></div><div class="field"><label>Arcade game name</label><input name="gameName" maxlength="24" placeholder="SNAKE.exe"><small style="color:#888">This name appears in the game window on your public website.</small></div><div class="field"><label>Hero eyebrow</label><input name="heroEyebrow"></div><div class="field"><label>Availability label</label><input name="availability"></div><div class="field"><label>Contact email</label><input name="email" type="email" required></div><div class="field full"><label>Hero headline (HTML allowed for line breaks and spans)</label><textarea name="heroTitle"></textarea></div><div class="field full"><label>Hero description (HTML allowed for bold)</label><textarea name="heroCopy"></textarea></div><div class="field full"><label>About headline (HTML allowed)</label><textarea name="aboutTitle"></textarea></div><div class="field full"><label>About paragraph</label><textarea name="aboutText"></textarea></div><div class="field full"><label>Contact introduction</label><textarea name="contactCopy"></textarea></div><div class="field full"><label>Instagram / DM link</label><input name="instagram" type="url" placeholder="https://www.instagram.com/yourprofile/"></div></div><div class="actions"><button class="btn primary">Save site details</button><button class="btn" type="button" id="reloadSettings">Discard changes</button></div><div class="status" id="settingsStatus"></div></form><div class="hint">Font: Poppins is loaded from Google Fonts. Qurova is a licensed/custom font and must be supplied by you: put its font file in <code>assets/qurova.woff2</code> and add the @font-face rule in <code>index.html</code> if you own a web-use license.</div></section>
 <section class="panel tab-panel hidden" id="tab-projects"><h2>Works / portfolio projects</h2><p>Add, edit, reorder or remove work. Artwork width and height control the display frame; the layout automatically fits computer and mobile screens. Use a public HTTPS image URL. Projects are grouped as Logo, Brand Identity or Poster.</p><form id="projectForm"><input type="hidden" name="id"><div class="grid"><div class="field"><label>Project title</label><input name="title" required></div><div class="field"><label>Category</label><select name="category"><option>Logo</option><option>Brand Identity</option><option>Poster</option></select></div><div class="field full"><label>Description</label><textarea name="description" required></textarea></div><div class="field full"><label>Image URL (optional)</label><input name="image_url" type="url" placeholder="https://.../your-project.jpg"></div><div class="field"><label>Artwork frame width (px)</label><input name="work_width" id="workWidth" type="number" min="50" max="1600" step="10" value="400"></div><div class="field"><label>Artwork frame height (px)</label><input name="work_height" id="workHeight" type="number" min="50" max="1200" step="10" value="325"></div><div class="field"><label>Fallback symbol (if no image)</label><input name="symbol" maxlength="8" value="D"></div><div class="field"><label>Accent/background colour</label><input name="color" type="color" value="#c8ff43"></div><div class="field"><label>Sort order (smaller appears first)</label><input name="sort_order" type="number" value="10"></div></div><div class="actions"><button class="btn primary" id="saveProjectBtn">Save project</button><button class="btn" type="button" id="clearProjectBtn">Clear form</button></div><div class="status" id="projectStatus"></div></form><hr style="border:0;border-top:1px solid #333;margin:25px 0"><div id="projectItems"></div></section>
 <section class="panel tab-panel hidden" id="tab-faqs"><h2>FAQ assistant</h2><p>These questions appear in both the FAQ section and the bottom-right non-AI assistant. Keep answers concise and helpful.</p><form id="faqForm"><input type="hidden" name="id"><div class="field"><label>Question</label><input name="question" required></div><div class="field"><label>Answer</label><textarea name="answer" required></textarea></div><div class="field"><label>Sort order</label><input name="sort_order" type="number" value="10"></div><div class="actions"><button class="btn primary">Save FAQ</button><button class="btn" type="button" id="clearFaqBtn">Clear form</button></div><div class="status" id="faqStatus"></div></form><div id="faqItems"></div></section>
+ 
+<!-- DEPTHOLOGY AI ASSISTANT CONTROL ROOM -->
+<section class="panel tab-panel hidden" id="tab-assistant">
+
+  <h2>Depthology AI Assistant</h2>
+  <p>Manage the public assistant and its knowledge base.</p>
+
+  <div class="dai-admin-section">
+    <h3>01 — Assistant Settings</h3>
+
+    <form id="daiSettingsForm">
+      <label>Assistant name</label>
+      <input id="daiName" type="text" placeholder="Depthology Assistant" required>
+
+      <label>Logo URL</label>
+      <input id="daiLogo" type="url" placeholder="https://...">
+
+      <label>Welcome message</label>
+      <textarea id="daiWelcome" required></textarea>
+
+      <label>Fallback message</label>
+      <textarea id="daiFallback" required></textarea>
+
+      <label>
+        <input id="daiEnabled" type="checkbox" checked>
+        Enable public assistant
+      </label>
+
+      <button type="submit">Save Settings</button>
+      <p id="daiSettingsStatus"></p>
+    </form>
+  </div>
+
+  <div class="dai-admin-section">
+    <h3>02 — Knowledge Manager</h3>
+    <p>Add verified answers for visitors.</p>
+
+    <form id="daiKnowledgeForm">
+      <input id="daiKnowledgeId" type="hidden">
+
+      <label>Visitor question</label>
+      <input id="daiQuestion" type="text" required
+        placeholder="What services does Depthology offer?">
+
+      <label>Answer</label>
+      <textarea id="daiAnswer" required
+        placeholder="Write the verified answer..."></textarea>
+
+      <label>Keywords (comma separated)</label>
+      <input id="daiKeywords" type="text"
+        placeholder="services, graphic design, logos">
+
+      <label>
+        <input id="daiApproved" type="checkbox">
+        Approve and publish this answer
+      </label>
+
+      <button type="submit">Save Knowledge</button>
+      <button type="button" id="daiClearKnowledge">Clear Form</button>
+
+      <p id="daiKnowledgeStatus"></p>
+    </form>
+
+    <h3>Published & Draft Knowledge</h3>
+    <div id="daiKnowledgeList">Loading knowledge...</div>
+  </div>
+
+  <div class="dai-admin-section">
+    <h3>03 — Unanswered Questions</h3>
+    <p>Questions visitors asked that need your attention.</p>
+    <div id="daiQuestionList">Loading questions...</div>
+  </div>
+
+</section>
+<!-- END DEPTHOLOGY AI CONTROL ROOM -->
+
 <section class="panel tab-panel hidden" id="tab-messages"><h2>Feedback inbox</h2><p>Contact form submissions are stored here. This section is visible only to the authenticated admin account.</p><button class="btn" id="refreshMessages">Refresh inbox</button><div class="status" id="messageStatus"></div><div id="messageItems"></div></section></div></div><script>
 const SB_URL='https://wazhlaqhdrsparthiqoj.supabase.co';const SB_KEY='sb_publishable_cqSoCgWQKrYGEjXyOwakWw_SQ6gqLXE';const configured=window.supabase&&SB_URL.startsWith('https://')&&SB_KEY!=='YOUR_SUPABASE_PUBLISHABLE_KEY';const db=configured?window.supabase.createClient(SB_URL,SB_KEY):null;let currentProjects=[],currentFaqs=[],settings={};const $=id=>document.getElementById(id);const status=(id,msg)=>$(id).textContent=msg;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function showDashboard(user){$('loginPanel').classList.add('hidden');$('dashboard').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');loadAll()}
