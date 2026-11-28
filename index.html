@@ -213,6 +213,201 @@ html[data-theme="light"] .toast{background:#643fae!important;color:#fff!importan
     opacity: 1;
   }
 }
+ 
+/* =====================================
+   DEPTHOLOGY KNOWLEDGE ASSISTANT
+===================================== */
+
+#depthAI {
+  --dai-bg: #090909;
+  --dai-card: #151515;
+  --dai-lime: #c8ff43;
+  --dai-violet: #9a7cff;
+  font-family: Poppins, sans-serif;
+  position: fixed;
+  right: 24px;
+  bottom: 100px;
+  z-index: 9998;
+  color: #fff;
+}
+
+#depthAI * { box-sizing: border-box; }
+
+#depthAIButton {
+  border: 1px solid rgba(200,255,67,.45);
+  background: #111;
+  color: var(--dai-lime);
+  border-radius: 50px;
+  padding: 13px 19px;
+  font: 600 13px Poppins, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 30px #0008;
+  transition: .25s ease;
+}
+
+#depthAIButton:hover {
+  background: var(--dai-lime);
+  color: #090909;
+  transform: translateY(-3px);
+}
+
+#depthAIPanel {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 62px;
+  width: min(365px, calc(100vw - 32px));
+  height: 490px;
+  max-height: calc(100dvh - 150px);
+  background: var(--dai-bg);
+  border: 1px solid #ffffff20;
+  border-radius: 19px;
+  overflow: hidden;
+  box-shadow: 0 18px 65px #000b;
+  flex-direction: column;
+}
+
+#depthAIPanel.open { display: flex; }
+
+.depthAIHead {
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: #121212;
+  border-bottom: 1px solid #ffffff15;
+}
+
+.depthAIAvatar {
+  width: 39px;
+  height: 39px;
+  border-radius: 12px;
+  background: var(--dai-lime);
+  color: #090909;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.depthAIAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.depthAIHead strong {
+  display: block;
+  font-size: 13px;
+}
+
+.depthAIHead small {
+  color: #999;
+  font-size: 10px;
+}
+
+#depthAIClose {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: #aaa;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+#depthAIChat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.depthAIMsg {
+  max-width: 88%;
+  padding: 11px 13px;
+  border-radius: 13px;
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.depthAIMsg.bot {
+  align-self: flex-start;
+  background: #1b1b1b;
+  color: #eee;
+  border: 1px solid #ffffff12;
+  border-bottom-left-radius: 4px;
+}
+
+.depthAIMsg.user {
+  align-self: flex-end;
+  background: var(--dai-lime);
+  color: #101010;
+  border-bottom-right-radius: 4px;
+}
+
+#depthAIForm {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: #111;
+  border-top: 1px solid #ffffff15;
+}
+
+#depthAIInput {
+  min-width: 0;
+  flex: 1;
+  background: #202020;
+  color: white;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  padding: 12px;
+  font: 12px Poppins, sans-serif;
+  outline: none;
+}
+
+#depthAIInput:focus {
+  border-color: var(--dai-violet);
+}
+
+#depthAISend {
+  border: 0;
+  border-radius: 10px;
+  padding: 0 15px;
+  background: var(--dai-lime);
+  color: #090909;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#depthAISend:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.depthAIFoot {
+  padding: 7px 12px;
+  text-align: center;
+  color: #777;
+  background: #111;
+  font-size: 9px;
+}
+
+@media(max-width: 480px) {
+  #depthAI {
+    right: 14px;
+    bottom: 92px;
+  }
+
+  #depthAIPanel {
+    width: calc(100vw - 28px);
+    height: min(490px, calc(100dvh - 145px));
+  }
+}
+
 
 </style></head>
 <body>
@@ -252,7 +447,48 @@ html[data-theme="light"] .toast{background:#643fae!important;color:#fff!importan
   </div>
 </section>
 
-<div class="assistant"><div class="assistant-panel" id="assistantPanel"><div class="assistant-head"><div class="assistant-icon">d.</div><div><strong>Depthology desk</strong><small>Quick answers · no AI involved</small></div></div><div class="assistant-body"><p>Hey there. Pick a question and I'll point you in the right direction.</p><div class="faq-options" id="faqOptions"></div><div class="assistant-answer" id="assistantAnswer"></div></div></div><button class="assistant-toggle" id="assistantToggle" aria-label="Open FAQ assistant"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-5 4v-4.1A2.5 2.5 0 0 1 4 13.5z"/><path d="M8 8h8M8 11h5"/></svg></button></div><div class="toast" id="toast"></div>
+<div class="assistant"><div class="assistant-panel" id="assistantPanel"><div class="assistant-head"><div class="assistant-icon">d.</div><div><strong>Depthology desk</strong><small>Quick answers · no AI involved</small></div></div><div class="assistant-body"><p>Hey there. Pick a question and I'll point you in the right direction.</p><div class="faq-options" id="faqOptions"></div><div class="assistant-answer" id="assistantAnswer"></div></div></div><button class="assistant-toggle" id="assistantToggle" aria-label="Open FAQ assistant"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-5 4v-4.1A2.5 2.5 0 0 1 4 13.5z"/><path d="M8 8h8M8 11h5"/></svg></button></div>
+ 
+<!-- DEPTHOLOGY KNOWLEDGE ASSISTANT -->
+<div id="depthAI">
+  <section id="depthAIPanel" aria-label="Depthology Assistant">
+    <header class="depthAIHead">
+      <div class="depthAIAvatar" id="depthAIAvatar">D.</div>
+      <div>
+        <strong id="depthAIName">Depthology Assistant</strong>
+        <small>Studio knowledge assistant</small>
+      </div>
+      <button id="depthAIClose" type="button" aria-label="Close">×</button>
+    </header>
+
+    <div id="depthAIChat" aria-live="polite">
+      <div class="depthAIMsg bot">
+        Hello! Welcome to Depthology. How can I help?
+      </div>
+    </div>
+
+    <form id="depthAIForm">
+      <input
+        id="depthAIInput"
+        type="text"
+        maxlength="500"
+        placeholder="Ask me something..."
+        autocomplete="off"
+        required
+      >
+      <button id="depthAISend" type="submit">Send</button>
+    </form>
+
+    <div class="depthAIFoot">THINK BEYOND LIMITS.</div>
+  </section>
+
+  <button id="depthAIButton" type="button">
+    ✦ Ask Depthology
+  </button>
+</div>
+<!-- END DEPTHOLOGY KNOWLEDGE ASSISTANT -->
+
+ <div class="toast" id="toast"></div>
 <script>
 // Configure Supabase in admin.html and index.html to enable live content updates across devices.
 const SB_URL='https://wazhlaqhdrsparthiqoj.supabase.co'; const SB_KEY='sb_publishable_cqSoCgWQKrYGEjXyOwakWw_SQ6gqLXE';
@@ -330,6 +566,226 @@ const cursor=document.getElementById('cursor');if(matchMedia('(pointer:fine)').m
 })();
 
 let observer;function observeReveals(){if(observer)observer.disconnect();observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal:not(.visible)').forEach(el=>observer.observe(el))}observeReveals();loadContent();
+ 
+/* ==========================================
+   DEPTHOLOGY KNOWLEDGE ASSISTANT ENGINE
+========================================== */
+(function () {
+  const panel = document.getElementById('depthAIPanel');
+  const toggle = document.getElementById('depthAIButton');
+  const close = document.getElementById('depthAIClose');
+  const chat = document.getElementById('depthAIChat');
+  const form = document.getElementById('depthAIForm');
+  const input = document.getElementById('depthAIInput');
+  const send = document.getElementById('depthAISend');
+  const nameEl = document.getElementById('depthAIName');
+  const avatar = document.getElementById('depthAIAvatar');
+
+  if (!panel || !toggle || !chat || !form) return;
+
+  let knowledge = [];
+  let assistantReady = false;
+  let assistantFallback =
+    'I do not have a verified answer yet. Your question can be sent to our studio.';
+
+  function addMessage(message, type) {
+    const item = document.createElement('div');
+    item.className = 'depthAIMsg ' + type;
+    item.textContent = message;
+    chat.appendChild(item);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function normalize(value) {
+    return String(value || '')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function words(value) {
+    return normalize(value)
+      .split(' ')
+      .filter(word => word.length > 1);
+  }
+
+  function findAnswer(question) {
+    const query = normalize(question);
+    const queryWords = [...new Set(words(question))];
+
+    if (!query || !queryWords.length) return null;
+
+    let best = null;
+    let bestScore = 0;
+
+    for (const item of knowledge) {
+      const searchable = normalize(
+        item.question + ' ' + (item.keywords || []).join(' ')
+      );
+
+      if (!searchable) continue;
+
+      if (searchable === query || searchable.includes(query)) {
+        return item;
+      }
+
+      const knowledgeWords = [...new Set(words(searchable))];
+      const matches = queryWords.filter(word =>
+        knowledgeWords.some(known =>
+          known === word ||
+          (word.length >= 4 && known.length >= 4 &&
+            (known.includes(word) || word.includes(known)))
+        )
+      );
+
+      const score = matches.length / queryWords.length;
+
+      if (score > bestScore) {
+        bestScore = score;
+        best = item;
+      }
+    }
+
+    return bestScore >= 0.45 ? best : null;
+  }
+
+  async function loadAssistant() {
+    try {
+      const [settingsResult, knowledgeResult] = await Promise.all([
+        db.from('assistant_settings')
+          .select('*')
+          .eq('id', 1)
+          .maybeSingle(),
+
+        db.from('assistant_knowledge')
+          .select('question, answer, keywords')
+          .eq('approved', true)
+      ]);
+
+      if (settingsResult.error) throw settingsResult.error;
+      if (knowledgeResult.error) throw knowledgeResult.error;
+
+      const settings = settingsResult.data;
+
+      if (settings && settings.enabled === false) {
+        document.getElementById('depthAI').style.display = 'none';
+        return;
+      }
+
+      if (settings) {
+        nameEl.textContent =
+          settings.assistant_name || 'Depthology Assistant';
+
+        assistantFallback =
+          settings.fallback_message || assistantFallback;
+
+        const welcome = settings.welcome_message ||
+          'Hello! Welcome to Depthology. How can I help?';
+
+        chat.replaceChildren();
+        addMessage(welcome, 'bot');
+
+        const logo = String(settings.logo_url || '').trim();
+
+        if (/^https:\/\//i.test(logo)) {
+          const img = document.createElement('img');
+          img.src = logo;
+          img.alt = 'Assistant logo';
+          img.onerror = () => { avatar.textContent = 'D.'; };
+          avatar.replaceChildren(img);
+        }
+      }
+
+      knowledge = knowledgeResult.data || [];
+      assistantReady = true;
+
+    } catch (error) {
+      console.error('Depthology Assistant:', error);
+      addMessage(
+        'The assistant is temporarily unavailable. Please try again later or contact our studio.',
+        'bot'
+      );
+    }
+  }
+
+  async function saveUnansweredQuestion(question) {
+    try {
+      const key = 'depthAIAsked_' + normalize(question);
+
+      if (sessionStorage.getItem(key)) return;
+
+      const { error } = await db
+        .from('assistant_questions')
+        .insert({
+          question: question,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      sessionStorage.setItem(key, '1');
+    } catch (error) {
+      console.error('Could not save visitor question:', error);
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) input.focus();
+  });
+
+  close.addEventListener('click', () => {
+    panel.classList.remove('open');
+  });
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const question = input.value.trim();
+    if (!question || send.disabled) return;
+
+    addMessage(question, 'user');
+    input.value = '';
+    send.disabled = true;
+    send.textContent = '...';
+
+    try {
+      if (!assistantReady) {
+        addMessage(
+          'I am still connecting. Please try again in a moment.',
+          'bot'
+        );
+        return;
+      }
+
+      const match = findAnswer(question);
+
+      if (match) {
+        addMessage(match.answer, 'bot');
+      } else {
+        addMessage(assistantFallback, 'bot');
+        await saveUnansweredQuestion(question);
+      }
+
+    } catch (error) {
+      console.error(error);
+      addMessage(
+        'Something went wrong. Please contact our studio directly.',
+        'bot'
+      );
+    } finally {
+      send.disabled = false;
+      send.textContent = 'Send';
+      input.focus();
+    }
+  });
+
+  loadAssistant();
+})();
+
 </script>
 <script>
 (function(){
@@ -373,5 +829,6 @@ window.addEventListener('load', function() {
   }
 });
  </script>
+
 
 </body></html>
