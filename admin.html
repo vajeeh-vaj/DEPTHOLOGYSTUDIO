@@ -192,5 +192,256 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelect
  if(btn)btn.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));
  window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue){const next=e.newValue==='light'?'light':'dark';document.documentElement.dataset.theme=next;if(btn){const label=next==='dark'?'Switch to light theme':'Switch to dark theme';btn.setAttribute('aria-label',label);btn.title=label;}const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=next==='light'?'#ffffff':'#090909';}});
 })();
+ 
+/* DEPTHOLOGY AI — ADMIN DATABASE CONNECTION */
+(function () {
+  let daiSourceQuestionId = null;
+  let daiLoaded = false;
+
+  const $ = id => document.getElementById(id);
+
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;',
+    '"': '&quot;', "'": '&#39;'
+  })[ch]);
+
+  function status(id, message) {
+    const el = $(id);
+    if (el) el.textContent = message;
+  }
+
+  async function loadSettings() {
+    const { data, error } = await db
+      .from('assistant_settings')
+      .select('*')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return;
+
+    $('daiName').value = data.assistant_name || '';
+    $('daiLogo').value = data.logo_url || '';
+    $('daiWelcome').value = data.welcome_message || '';
+    $('daiFallback').value = data.fallback_message || '';
+    $('daiEnabled').checked = data.enabled !== false;
+  }
+
+  async function loadKnowledge() {
+    const box = $('daiKnowledgeList');
+    box.textContent = 'Loading...';
+
+    const { data, error } = await db
+      .from('assistant_knowledge')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || !data.length) {
+      box.textContent = 'No knowledge entries yet.';
+      return;
+    }
+
+    box.innerHTML = data.map(item => `
+      <div class="dai-knowledge-item">
+        <strong>${esc(item.question)}</strong>
+        <p>${esc(item.answer)}</p>
+        <small>${item.approved ? 'Published' : 'Draft'}</small>
+        <br>
+        <button type="button" data-edit="${esc(item.id)}">Edit</button>
+        <button type="button" data-delete="${esc(item.id)}">Delete</button>
+      </div>
+    `).join('');
+
+    box.querySelectorAll('[data-edit]').forEach(button => {
+      button.onclick = () => {
+        const item = data.find(x => x.id === button.dataset.edit);
+        if (!item) return;
+
+        $('daiKnowledgeId').value = item.id;
+        $('daiQuestion').value = item.question || '';
+        $('daiAnswer').value = item.answer || '';
+        $('daiKeywords').value = (item.keywords || []).join(', ');
+        $('daiApproved').checked = !!item.approved;
+        daiSourceQuestionId = null;
+
+        status('daiKnowledgeStatus', 'Editing knowledge entry.');
+        $('daiQuestion').scrollIntoView({ behavior: 'smooth' });
+      };
+    });
+
+    box.querySelectorAll('[data-delete]').forEach(button => {
+      button.onclick = async () => {
+        if (!confirm('Delete this knowledge entry?')) return;
+
+        const { error } = await db
+          .from('assistant_knowledge')
+          .delete()
+          .eq('id', button.dataset.delete);
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        await loadKnowledge();
+      };
+    });
+  }
+
+  async function loadQuestions() {
+    const box = $('daiQuestionList');
+    box.textContent = 'Loading...';
+
+    const { data, error } = await db
+      .from('assistant_questions')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || !data.length) {
+      box.textContent = 'No unanswered questions. Great!';
+      return;
+    }
+
+    box.innerHTML = data.map(item => `
+      <div class="dai-question-item">
+        <strong>${esc(item.question)}</strong>
+        <br>
+        <small>${esc(item.created_at || '')}</small>
+        <br>
+        <button type="button" data-answer="${esc(item.id)}">Answer this</button>
+      </div>
+    `).join('');
+
+    box.querySelectorAll('[data-answer]').forEach(button => {
+      button.onclick = () => {
+        const item = data.find(x => x.id === button.dataset.answer);
+        if (!item) return;
+
+        daiSourceQuestionId = item.id;
+        $('daiKnowledgeId').value = '';
+        $('daiQuestion').value = item.question || '';
+        $('daiAnswer').value = '';
+        $('daiKeywords').value = '';
+        $('daiApproved').checked = false;
+
+        status('daiKnowledgeStatus',
+          'Write the answer, then save it. The question will be marked answered.');
+
+        $('daiAnswer').scrollIntoView({ behavior: 'smooth' });
+      };
+    });
+  }
+
+  async function loadDaiAdmin() {
+    if (!db) {
+      status('daiSettingsStatus', 'Database connection is unavailable.');
+      return;
+    }
+
+    try {
+      await Promise.all([
+        loadSettings(),
+        loadKnowledge(),
+        loadQuestions()
+      ]);
+      daiLoaded = true;
+    } catch (error) {
+      console.error('Depthology Assistant Admin:', error);
+      status('daiSettingsStatus', 'Could not load data: ' + error.message);
+    }
+  }
+
+  $('daiSettingsForm').addEventListener('submit', async event => {
+    event.preventDefault();
+
+    status('daiSettingsStatus', 'Saving...');
+
+    try {
+      const { error } = await db.from('assistant_settings').upsert({
+        id: 1,
+        assistant_name: $('daiName').value.trim(),
+        logo_url: $('daiLogo').value.trim(),
+        welcome_message: $('daiWelcome').value.trim(),
+        fallback_message: $('daiFallback').value.trim(),
+        enabled: $('daiEnabled').checked,
+        updated_at: new Date().toISOString()
+      });
+
+      if (error) throw error;
+      status('daiSettingsStatus', 'Settings saved successfully!');
+    } catch (error) {
+      status('daiSettingsStatus', 'Save failed: ' + error.message);
+    }
+  });
+
+  $('daiKnowledgeForm').addEventListener('submit', async event => {
+    event.preventDefault();
+
+    status('daiKnowledgeStatus', 'Saving...');
+
+    try {
+      const id = $('daiKnowledgeId').value;
+
+      const entry = {
+        question: $('daiQuestion').value.trim(),
+        answer: $('daiAnswer').value.trim(),
+        keywords: $('daiKeywords').value
+          .split(',')
+          .map(x => x.trim())
+          .filter(Boolean),
+        approved: $('daiApproved').checked,
+        updated_at: new Date().toISOString()
+      };
+
+      if (id) {
+        const { error } = await db
+          .from('assistant_knowledge')
+          .update(entry)
+          .eq('id', id);
+        if (error) throw error;
+      } else {
+        const { error } = await db
+          .from('assistant_knowledge')
+          .insert(entry);
+        if (error) throw error;
+      }
+
+      if (daiSourceQuestionId) {
+        const { error } = await db
+          .from('assistant_questions')
+          .update({ status: 'answered' })
+          .eq('id', daiSourceQuestionId);
+        if (error) throw error;
+      }
+
+      $('daiKnowledgeForm').reset();
+      $('daiKnowledgeId').value = '';
+      daiSourceQuestionId = null;
+
+      status('daiKnowledgeStatus', 'Knowledge saved successfully!');
+      await Promise.all([loadKnowledge(), loadQuestions()]);
+
+    } catch (error) {
+      status('daiKnowledgeStatus', 'Save failed: ' + error.message);
+    }
+  });
+
+  $('daiClearKnowledge').addEventListener('click', () => {
+    $('daiKnowledgeForm').reset();
+    $('daiKnowledgeId').value = '';
+    daiSourceQuestionId = null;
+    status('daiKnowledgeStatus', '');
+  });
+
+  document.querySelector('[data-tab="assistant"]')
+    ?.addEventListener('click', loadDaiAdmin);
+
+})();
+
 </script>
 </body></html>
